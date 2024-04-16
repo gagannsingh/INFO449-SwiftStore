@@ -23,7 +23,7 @@ final class StoreTests: XCTestCase {
     }
     
     func testOneItem() {
-        register.scan(item: Item(name: "Beans (8oz Can)", priceEach: 199))
+        register.scan(Item(name: "Beans (8oz Can)", priceEach: 199))
         XCTAssertEqual(199, register.subtotal())
         
         let receipt = register.total()
