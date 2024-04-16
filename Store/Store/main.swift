@@ -14,46 +14,46 @@ protocol SKU {
 
 class Item: SKU {
   var name: String
-  var pricePerItem: Int // lowercase for camelCase
+  var priceEach: Int
 
-  init(name: String, pricePerItem: Int) {
+  init(name: String, priceEach: Int) {
     self.name = name
-    self.pricePerItem = pricePerItem
+    self.priceEach = priceEach
   }
 
   func price() -> Int {
-    return pricePerItem
+    return priceEach
   }
 }
 
 class Receipt {
-  var scanned: [SKU] = []
+    var scanned: [SKU] = []
 
-  func add(_ item: SKU) {
-    scanned.append(item)
-  }
-
-  func items() -> [SKU] {
-    return scanned
-  }
-
-  func subtotal() -> Int {
-    var totalPrice = 0
-    for item in scanned {
-      totalPrice += item.price()
+    func add(_ item: SKU) {
+        scanned.append(item)
     }
-    return totalPrice
-  }
 
-  func output() -> String {
-    var receiptText = "Receipt:\n"
-    for item in scanned {
-      receiptText += "\(item.name): $\(String(format: "%.2f", Double(item.price()) / 100))\n"
+    func items() -> [SKU] {
+        return scanned
     }
-    receiptText += "------------------\n"
-    receiptText += "TOTAL: $\(String(format: "%.2f", Double(subtotal()) / 100))"
-    return receiptText
-  }
+
+    func subtotal() -> Int {
+        return scanned.reduce(0) { $0 + $1.price() }
+    }
+
+    func total() -> Int {
+        return subtotal() // Simply return the subtotal
+    }
+
+    func output() -> String {
+        var receiptText = "Receipt:\n"
+        for item in scanned {
+            receiptText += "\(item.name): $\(String(format: "%.2f", Double(item.price()) / 100))\n"
+        }
+        receiptText += "------------------\n"
+        receiptText += "TOTAL: $\(String(format: "%.2f", Double(total()) / 100))" // Use total() here
+        return receiptText
+    }
 }
 
 class Register {
@@ -63,12 +63,16 @@ class Register {
     receipt = Receipt()
   }
 
-  func scan(item: SKU) { // renamed for clarity
+  func scan(_ item: SKU) {
     receipt.add(item)
   }
 
   func subtotal() -> Int {
     return receipt.items().reduce(0) { $0 + $1.price() }
+  }
+  
+  func total() -> Int {
+    return subtotal() 
   }
 }
 
